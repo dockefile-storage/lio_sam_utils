@@ -1,0 +1,30 @@
+# docker-compose.yml
+version: "3.0"
+services:
+  autoware:
+    #privileged: true
+    image: lidar_align:v1.0.1
+    container_name: lidar_align
+    #runtime: nvidia
+    user: 'root'
+    #working_dir: /mnt/pm-autopilot-1.0
+    #restart: always
+    network_mode: "host"
+    # ports:
+    #   - "9090:9090"
+    volumes:
+      - /tmp/.X11-unix:/tmp/.X11-unix:rw
+      - /tmp/work/:/mnt
+      - ~/extdisk/bag_file:/root/bag_file
+      - /usr/share/fonts:/usr/share/fonts # 字体问题
+    environment:
+      - DISPLAY=:1
+      #- USER_ID=1000
+      - QT_X11_NO_MITSHM=1
+      - QT_LOGGING_RULES=*=false  # export QT_LOGGING_RULES="*=false"
+    hostname: 'HP-Laptop'
+    extra_hosts:
+      - "HP-Laptop:127.0.0.1"
+
+    # deb [trusted=yes] http://192.168.1.100:81 v1.0.0/
+    entrypoint: ["/bin/bash", "-c", "while true; do echo hello world; sleep 1; done"]
