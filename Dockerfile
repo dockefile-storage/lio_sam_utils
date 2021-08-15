@@ -11,12 +11,12 @@ COPY init.sh /root
 COPY cfg/cpp /root/cpp
 
 RUN bash -c /root/init.sh
-##  添加 科大ROS源
-RUN sh -c '. /etc/lsb-release && echo "deb http://mirrors.ustc.edu.cn/ros/ubuntu/ $DISTRIB_CODENAME main" > /etc/apt/sources.list.d/ros-latest.list' &&\
-	apt-key adv --keyserver keyserver.ubuntu.com --recv-keys F42ED6FBAB17C654 &&\
-	apt-get update 
-#
-RUN   apt-get install -y \
+# ##  添加 科大ROS源
+# RUN sh -c '. /etc/lsb-release && echo "deb http://mirrors.ustc.edu.cn/ros/ubuntu/ $DISTRIB_CODENAME main" > /etc/apt/sources.list.d/ros-latest.list' &&\
+# 	apt-key adv --keyserver keyserver.ubuntu.com --recv-keys F42ED6FBAB17C654 &&\
+# 	apt-get update 
+
+RUN  apt-get update && apt-get install -y \
 	     iputils-ping \
 		 apt-transport-https \
 		 ca-certificates \
@@ -36,7 +36,7 @@ RUN apt-get install -y  \
 
 RUN apt-get install -y qt5-assistant qttools5-dev-tools libopenni-dev ros-melodic-pcl-ros 
 RUN mkdir -p /root/lidar_align/src &&\
- 	git clone --depth 1  https://hub.fastgit.org/ethz-asl/lidar_align.git /root/lidar_align/src/lidar_align &&\ 
+ 	git clone --depth 1  https://github.com/ethz-asl/lidar_align.git /root/lidar_align/src/lidar_align &&\ 
 	cp /root/lidar_align/src/lidar_align/NLOPTConfig.cmake /root/lidar_align/src/ &&\ 
 	cd  /root/lidar_align/ &&\ 
 	rosdep install -y --from-paths src --ignore-src --rosdistro $ROS_DISTRO &&\
@@ -53,10 +53,10 @@ RUN mkdir -p /root/lidar_align/src &&\
 
 RUN apt-get install -y libdw-dev libceres-dev &&\
 mkdir -p /root/imu_calibration_toos/src &&\ 
-git clone --depth 1 https://hub.fastgit.org/gaowenliang/code_utils.git /root/imu_calibration_toos/src/code_utils &&\
+git clone --depth 1 https://github.com/gaowenliang/code_utils.git /root/imu_calibration_toos/src/code_utils &&\
 sed -i "s/backward.hpp/code_utils\/backward.hpp/" /root/imu_calibration_toos/src/code_utils/src/sumpixel_test.cpp &&\
 cd /root/imu_calibration_toos/; bash -c "source /opt/ros/melodic/setup.bash;catkin_make" &&\
-git clone --depth 1 https://hub.fastgit.org/gaowenliang/imu_utils.git /root/imu_calibration_toos/src/imu_utils &&\
+git clone --depth 1 https://github.com/gaowenliang/imu_utils.git /root/imu_calibration_toos/src/imu_utils &&\
 cd /root/imu_calibration_toos/; bash -c "source /opt/ros/melodic/setup.bash;catkin_make" 
 
 #EXPOSE 22
